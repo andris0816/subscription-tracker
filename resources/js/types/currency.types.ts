@@ -1,7 +1,7 @@
-export const currencies = [
+export const currencies: readonly string[] = [
     "HUF",
     "EUR",
     "USD"
-] as const;
+]
 
 export type Currency = typeof currencies[number];
