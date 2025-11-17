@@ -6,7 +6,6 @@ import {Head, useForm} from "@inertiajs/vue3";
 import {VueDatePicker} from "@vuepic/vue-datepicker";
 import '@vuepic/vue-datepicker/dist/main.css'
 import Modal from "@/Components/Modal.vue";
-import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {ref} from "vue";
@@ -62,6 +61,7 @@ const closeModal = () => {
                         id="renewalDate"
                         v-model="form.renewalDate"
                         class="mt-2"
+                        teleport="body"
                     />
                 </div>
                 <div class="mt-4">
