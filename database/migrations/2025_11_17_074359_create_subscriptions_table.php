@@ -18,7 +18,8 @@ return new class extends Migration
                 ->constrained('users')
                 ->cascadeOnDelete();
             $table->string('name');
-            $table->decimal('price', 8, 2)->default(0);
+            $table->bigInteger('price')->default(0);
+            $table->string('currency', 3);
             $table->date('renewal_date');
             $table->string('billing_cycle');
             $table->text('cancel_url')->nullable();

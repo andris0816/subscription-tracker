@@ -26,6 +26,7 @@ class StoreSubscriptionRequest extends FormRequest
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'renewal_date' => 'required|date',
+            'currency' => 'required',
             'billing_cycle' => 'required|string',
             'cancel_url' => 'nullable|string|url',
         ];
