@@ -33,7 +33,7 @@ defineProps<Props>();
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                 </svg>
                 <span>{{ subscription.price }}</span>
-                <span>/ {{ subscription.billingCycle }}</span>
+                <span>/ {{ subscription.billing_cycle }}</span>
             </div>
             <div class="flex items-center text-gray-700">
                 <svg
@@ -54,7 +54,7 @@ defineProps<Props>();
                     <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                     <path d="M3 10h18"></path>
                 </svg>
-                <span>Renews: {{ subscription.renewalDate }}</span>
+                <span>Renews: {{ subscription.renewal_date }}</span>
             </div>
             <div class="flex items-center text-gray-700">
                 <svg
@@ -79,7 +79,7 @@ defineProps<Props>();
             </div>
             <a
                 class="flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm"
-                :href="subscription.billingCycle"
+                :href="subscription.billing_cycle"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +101,16 @@ defineProps<Props>();
                 Cancel subscription
             </a>
         </div>
+        <div
+            class="items-center px-6 pb-6 [.border-t]:pt-6 pt-4 border-t border-gray-100 flex gap-2 mb-4 justify-between"
+            data-slot="card-footer"
+        >
+            <!-- TODO EDIT MODAL -->
+            <SecondaryButton>Edit</SecondaryButton>
 
+            <!-- TODO DELETE MODAL -->
+            <DangerButton>Delete</DangerButton>
+        </div>
     </div>
 
 </template>

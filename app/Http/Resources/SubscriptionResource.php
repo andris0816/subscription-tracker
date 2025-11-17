@@ -19,9 +19,9 @@ class SubscriptionResource extends JsonResource
             'name' => $this->name,
             'price' => $this->price,
             'currency' => $this->currency,
-            'renewalDate' => $this->renewal_date,
-            'billingCycle' => $this->billing_cycle,
-            'cancelUrl' => $this->cancel_url,
+            'renewal_date' => $this->renewal_date,
+            'billing_cycle' => $this->billing_cycle,
+            'cancel_url' => $this->cancel_url,
         ];
     }
 }

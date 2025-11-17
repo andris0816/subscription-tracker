@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class StoreSubscriptionRequest extends FormRequest
@@ -30,5 +31,14 @@ class StoreSubscriptionRequest extends FormRequest
             'billing_cycle' => 'required|string',
             'cancel_url' => 'nullable|string|url',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        if ($this->renewal_date) {
+            $this->merge([
+                'renewal_date' => Carbon::parse($this->renewal_date)->format('Y-m-d')
+            ]);
+        }
     }
 }
