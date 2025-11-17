@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import {Subscription} from "@/Types/Subscription";
+import {Subscription} from "@/types/subscription.interface";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 
 interface Props {
     subscription: Subscription;
@@ -11,10 +13,20 @@ defineProps<Props>();
 </script>
 
 <template>
-    <div>
-        <h2>{{ subscription.name }}</h2>
-        <!--   TODO: little tags   -->
-        <div>
+    <div class="text-card-foreground flex flex-col gap-6 rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow" data-slot="card">
+        <div
+            class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 pt-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 pb-3"
+            data-slot="card-header"
+        >
+            <div class="flex items-start justify-between pb-3">
+                <div class="flex-1">
+                    <h2>{{ subscription.name }}</h2>
+                    <span>placeholder tag</span>
+                    <!--   TODO: little tags   -->
+                </div>
+            </div>
+        </div>
+        <div class="px-6 [&:last-child]:pb-6 pb-4 space-y-3" data-slot="card-content">
             <div class="flex items-center text-gray-700">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
