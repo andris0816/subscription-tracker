@@ -4,7 +4,7 @@ import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import {ref} from "vue";
 import {Subscription} from "@/types/subscription.interface";
-import {router} from "@inertiajs/vue3";
+import {router, usePage} from "@inertiajs/vue3";
 
 const props = defineProps<{
     show: boolean,
@@ -18,14 +18,11 @@ const emit = defineEmits<{
     close: [];
 }>();
 
-const deleteSubscription = () => {
-    router.delete(route('subscription.destroy', props.subscription.id), {
-        onSuccess: () => {
-            const deletedId = usePage().props.deletedId;
-            emit('deleted', deletedId);
-            emit('close');
-        }
-    });
+const deleteSubscription = async () => {
+    const response = await axios.delete(route('subscription.destroy', props.subscription.id));
+
+    emit('deleted', response.data.deletedId);
+    emit('close');
 };
 </script>
 

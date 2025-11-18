@@ -34,9 +34,8 @@ class SubscriptionController extends Controller
         $user = Auth::user();
         $subscription = $user->subscriptions()->create($data);
 
-        // This feels like it's not gonna good
-        return back()->with([
-            'newSubscription' => new SubscriptionResource($subscription)
+        return response()->json([
+            'subscription' => new SubscriptionResource($subscription)
         ]);
     }
 
@@ -48,7 +47,7 @@ class SubscriptionController extends Controller
         $subscription->update($data);
 
         return back()->with([
-            'updatedSubscription' => new SubscriptionResource($subscription)
+            'subscription' => new SubscriptionResource($subscription)
         ]);
     }
 
@@ -58,8 +57,8 @@ class SubscriptionController extends Controller
 
         $subscription->delete();
 
-        return back()->with([
-            'deletedId' => $subscription->getKey()
+        return response()->json([
+            'deletedId' => $subscription->id
         ]);
     }
 }

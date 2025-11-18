@@ -13,25 +13,25 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const subscriptions = ref<Subscription[]>(props.subscriptions);
+const subscriptionsRef = ref<Subscription[]>(props.subscriptions);
 const showCreateEditModal = ref(false);
 const showDeleteModal = ref(false);
 const selectedSubscription = ref<Subscription | null>(null);
 
 const handleCreated = (subscription: Subscription) => {
-    subscriptions.value.unshift(subscription);
+    subscriptionsRef.value.unshift(subscription);
     showCreateEditModal.value = false;
 }
 
 const handleUpdated = (subscription: Subscription) => {
-    subscriptions.value = subscriptions.value.map(s =>
+    subscriptionsRef.value = subscriptionsRef.value.map(s =>
         s.id === subscription.id ? subscription : s
     );
     showCreateEditModal.value = false;
 }
 
 const handleDeleted = (id: number) => {
-    subscriptions.value = subscriptions.value.filter(s => s.id !== id);
+    subscriptionsRef.value = subscriptionsRef.value.filter(s => s.id !== id);
     selectedSubscription.value = null;
 }
 
@@ -76,7 +76,7 @@ const openDeleteModal = (subscription: Subscription) => {
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <SubscriptionCard
-                    v-for="subscription in subscriptions"
+                    v-for="subscription in subscriptionsRef"
                     :key="subscription.id"
                     :subscription="subscription"
                     @edit="openEditModal"
@@ -86,7 +86,7 @@ const openDeleteModal = (subscription: Subscription) => {
                 <DeleteSubscriptionModal
                     :show="showDeleteModal"
                     :subscription="selectedSubscription"
-                    @delete="handleDeleted"
+                    @deleted="handleDeleted"
                     @close="showDeleteModal = false"
                 />
             </div>

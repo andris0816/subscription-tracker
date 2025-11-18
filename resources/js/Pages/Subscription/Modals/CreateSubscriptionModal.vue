@@ -2,7 +2,7 @@
 
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from '@/Components/TextInput.vue';
-import {useForm, usePage} from "@inertiajs/vue3";
+import {useForm} from "@inertiajs/vue3";
 import {VueDatePicker} from "@vuepic/vue-datepicker";
 import '@vuepic/vue-datepicker/dist/main.css';
 import Modal from "@/Components/Modal.vue";
@@ -34,29 +34,26 @@ const emit = defineEmits<{
     close: [];
 }>();
 
-const createSubscription = () => {
+const createSubscription = async () => {
     if (props.subscription) {
-        form.patch(route('subscription.update', props.subscription.id), {
-            onSuccess: () => {
-                const updated = usePage().props.updatedSubscription
-                emit('updated', updated)
-                emit('close');
-            },
-        });
+        const response = await axios.post(route('subscription.update'), form.data());
+        emit('updated', response.data.subscription);
+
+        close();
     } else {
-        form.post(route('subscription.store'), {
-            onSuccess: () => {
-                const props = usePage().props as { newSubscription?: Subscription };
+        const response = await axios.post(route('subscription.store'), form.data());
+        emit('created', response.data.subscription);
 
-                if (props.newSubscription) {
-                    emit('created', props.newSubscription);
-                }
-
-                emit('close');
-            },
-        });
+        close();
     }
 };
+
+const close = () => {
+    form.reset();
+    form.clearErrors();
+    emit('close');
+};
+
 
 watch(() => props.subscription, (newSubscription: Subscription) => {
     if (newSubscription) {
@@ -159,7 +156,6 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
                         class="ms-3"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
-                        @click="createSubscription"
                     >
                         Add Subscription
                     </PrimaryButton>
