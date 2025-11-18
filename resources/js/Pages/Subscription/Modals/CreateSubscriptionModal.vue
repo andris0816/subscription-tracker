@@ -8,54 +8,72 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {ref} from "vue";
+import {watch} from "vue";
 import {Subscription} from "@/types/subscription.interface";
-import {currencies, type Currency} from "@/types/currency.types";
+import {currencies} from "@/types/currency.types";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
+import InputError from "@/Components/InputError.vue";
+
+const props = defineProps<{
+    show: boolean,
+    subscription: Subscription | null;
+}>();
 
 const form = useForm({
     name: '',
-    price: 0,
+    price: '',
     renewal_date: null,
     currency: currencies[0],
     billing_cycle: '',
     cancel_url: '',
 });
-const createSubscriptionModal = ref(false);
 
 const emit = defineEmits<{
-    (e: 'created', newSubscription: Subscription): void
+    created: [Subscription];
+    updated: [Subscription];
+    close: [];
 }>();
 
-
-
 const createSubscription = () => {
-    form.post(route('subscription.store'), {
-        onSuccess: () => {
-            const props = usePage().props as { newSubscription?: Subscription };
+    if (props.subscription) {
+        form.patch(route('subscription.update', props.subscription.id), {
+            onSuccess: () => {
+                const updated = usePage().props.updatedSubscription
+                emit('updated', updated)
+                emit('close');
+            },
+        });
+    } else {
+        form.post(route('subscription.store'), {
+            onSuccess: () => {
+                const props = usePage().props as { newSubscription?: Subscription };
 
-            if (props.newSubscription) {
-                emit('created', props.newSubscription);
-            }
+                if (props.newSubscription) {
+                    emit('created', props.newSubscription);
+                }
 
-            closeModal();
-        },
-    });
+                emit('close');
+            },
+        });
+    }
 };
 
-
-const closeModal = () => {
-    createSubscriptionModal.value = false;
-
-    form.clearErrors();
-    form.reset();
-};
+watch(() => props.subscription, (newSubscription: Subscription) => {
+    if (newSubscription) {
+        form.name = newSubscription.name;
+        form.price = String(newSubscription.price);
+        form.renewal_date = newSubscription.renewal_date;
+        form.currency = newSubscription.currency;
+        form.billing_cycle = newSubscription.billing_cycle;
+        form.cancel_url = newSubscription.cancel_url;
+    } else {
+        form.reset();
+    }
+});
 </script>
 
 <template>
-    <PrimaryButton @click="createSubscriptionModal = true">Create Subscription</PrimaryButton>
-
-    <Modal :show="createSubscriptionModal" @close="closeModal">
+    <Modal :show="show" @close="$emit('close')">
         <div class="p-6">
             <form @submit.prevent="createSubscription" method="POST">
                 <div>
@@ -66,6 +84,7 @@ const closeModal = () => {
                         v-model="form.name"
                         class="mt-1 block w-full"
                     />
+                    <InputError :message="form.errors.name" class="mt-2" />
                 </div>
                 <div class="mt-4">
                     <InputLabel for="price" value="Price" />
@@ -75,6 +94,7 @@ const closeModal = () => {
                         v-model="form.price"
                         class="mt-2 block w-full"
                     />
+                    <InputError :message="form.errors.price" class="mt-2" />
                 </div>
                 <div class="mt-4">
                     <InputLabel for="currency" value="Currency" />
@@ -95,6 +115,7 @@ const closeModal = () => {
                                 </ListboxOption>
                             </ListboxOptions>
                         </Listbox>
+                        <InputError :message="form.errors.currency" class="mt-2" />
                     </div>
                 </div>
                 <div class="mt-4">
@@ -105,6 +126,7 @@ const closeModal = () => {
                         class="mt-2"
                         teleport="body"
                     />
+                    <InputError :message="form.errors.renewal_date" class="mt-2" />
                 </div>
                 <div class="mt-4">
                     <InputLabel for="billingCycle" value="Billing Cycle" />
@@ -114,6 +136,7 @@ const closeModal = () => {
                         v-model="form.billing_cycle"
                         class="mt-2 block w-full"
                     />
+                    <InputError :message="form.errors.billing_cycle" class="mt-2" />
                 </div>
                 <div class="mt-4">
                     <InputLabel for="cancelUrl" value="Cancel Url" />
@@ -123,10 +146,11 @@ const closeModal = () => {
                         v-model="form.cancel_url"
                         class="mt-2 block w-full"
                     />
+                    <InputError :message="form.errors.cancel_url" class="mt-2" />
                 </div>
 
                 <div class="mt-6 flex justify-end">
-                    <SecondaryButton @click="closeModal">
+                    <SecondaryButton @click="$emit('close')">
                         Cancel
                     </SecondaryButton>
 
