@@ -2,13 +2,16 @@
 import {Subscription} from "@/types/subscription.interface";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
-import {useRenewalCountdown} from "@/composables/useRenewalCountdown";
+import {useRenewalCountdown, useRenewalStatus} from "@/composables/useRenewalCountdown";
+import Badge from "@/Components/Badge.vue";
 
 const props = defineProps<{ subscription: Subscription }>();
 const emit = defineEmits<{
     edit: [Subscription];
     delete: [Subscription];
 }>();
+
+const {daysLeft, renewingSoon, expired} = useRenewalStatus(props.subscription.renewal_date);
 
 const { timeUntil } = useRenewalCountdown(props.subscription.renewal_date);
 </script>
@@ -22,8 +25,14 @@ const { timeUntil } = useRenewalCountdown(props.subscription.renewal_date);
             <div class="flex items-start justify-between pb-3">
                 <div class="flex-1">
                     <h2>{{ subscription.name }}</h2>
-                    <span>placeholder tag</span>
-                    <!--   TODO: little tags   -->
+                    <div class="flex items-center gap-2 mt-3">
+                        <Badge v-if="renewingSoon" variant="renewing soon">
+                            Renewing Soon ({{ daysLeft }} days)
+                        </Badge>
+                        <Badge :variant="subscription.billing_cycle">
+                            {{ subscription.billing_cycle }}
+                        </Badge>
+                    </div>
                 </div>
             </div>
         </div>

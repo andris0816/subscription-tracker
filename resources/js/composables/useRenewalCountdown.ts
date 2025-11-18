@@ -30,3 +30,17 @@ export function useRenewalCountdown(renewalDate: string | Date) {
 
     return { timeUntil };
 }
+
+export function useRenewalStatus(renewalDate: string | Date) {
+    const date = new Date(renewalDate)
+    const now = new Date();
+
+    const diffMs = date.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    return {
+        daysLeft: diffDays,
+        renewingSoon: diffDays > 0 && diffDays <= 7,
+        expired: diffDays <= 0,
+    }
+}
