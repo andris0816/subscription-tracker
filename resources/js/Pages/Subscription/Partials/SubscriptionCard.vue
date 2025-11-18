@@ -2,13 +2,15 @@
 import {Subscription} from "@/types/subscription.interface";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import {useRenewalCountdown} from "@/composables/useRenewalCountdown";
 
-defineProps<{ subscription: Subscription }>();
+const props = defineProps<{ subscription: Subscription }>();
 const emit = defineEmits<{
     edit: [Subscription];
     delete: [Subscription];
 }>();
 
+const { timeUntil } = useRenewalCountdown(props.subscription.renewal_date);
 </script>
 
 <template>
@@ -86,11 +88,11 @@ const emit = defineEmits<{
                     <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
                     <path d="M8 16H3v5"></path>
                 </svg>
-                <span>TODO: Calculated date (countdown)</span>
+                <span>{{ timeUntil }}</span>
             </div>
             <a
                 class="flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm"
-                :href="subscription.billing_cycle"
+                :href="subscription.cancel_url"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
