@@ -24,11 +24,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscription.index');
-    Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
-    Route::get('subscription/{subscription}', [SubscriptionController::class, 'show'])->name('subscription.show');
-    Route::patch('subscription/{subscription}', [SubscriptionController::class, 'update'])->name('subscription.update');
-    Route::delete('subscription/{subscription}', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::post('subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');
+    Route::get('subscriptions/{subscription}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::patch('subscriptions/{subscription}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
+    Route::delete('subscriptions/{subscription}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
 });
 
 require __DIR__.'/auth.php';

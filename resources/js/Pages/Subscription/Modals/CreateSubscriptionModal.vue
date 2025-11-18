@@ -36,12 +36,16 @@ const emit = defineEmits<{
 
 const createSubscription = async () => {
     if (props.subscription) {
-        const response = await axios.post(route('subscription.update'), form.data());
+        const response = await axios.patch(
+            route('subscriptions.update', { subscription: props.subscription.id }),
+            form.data()
+        );
+
         emit('updated', response.data.subscription);
 
         close();
     } else {
-        const response = await axios.post(route('subscription.store'), form.data());
+        const response = await axios.post(route('subscriptions.store'), form.data());
         emit('created', response.data.subscription);
 
         close();
@@ -72,7 +76,7 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
 <template>
     <Modal :show="show" @close="$emit('close')">
         <div class="p-6">
-            <form @submit.prevent="createSubscription" method="POST">
+            <form @submit.prevent="createSubscription">
                 <div>
                     <InputLabel for="name" value="Subscription Name" />
                     <TextInput

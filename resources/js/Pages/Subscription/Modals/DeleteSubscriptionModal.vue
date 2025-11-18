@@ -19,7 +19,7 @@ const emit = defineEmits<{
 }>();
 
 const deleteSubscription = async () => {
-    const response = await axios.delete(route('subscription.destroy', props.subscription.id));
+    const response = await axios.delete(route('subscriptions.destroy', props.subscription.id));
 
     emit('deleted', response.data.deletedId);
     emit('close');

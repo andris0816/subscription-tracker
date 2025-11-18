@@ -46,7 +46,7 @@ class SubscriptionController extends Controller
         $data = $request->validated();
         $subscription->update($data);
 
-        return back()->with([
+        return response()->json([
             'subscription' => new SubscriptionResource($subscription)
         ]);
     }
