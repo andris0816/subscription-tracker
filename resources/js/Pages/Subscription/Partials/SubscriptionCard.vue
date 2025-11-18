@@ -3,12 +3,11 @@ import {Subscription} from "@/types/subscription.interface";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 
-interface Props {
-    subscription: Subscription;
-}
-
-defineProps<Props>();
-
+defineProps<{ subscription: Subscription }>();
+const emit = defineEmits<{
+    edit: [Subscription];
+    delete: [Subscription];
+}>();
 
 </script>
 
@@ -117,11 +116,9 @@ defineProps<Props>();
             class="items-center px-6 pb-6 [.border-t]:pt-6 pt-4 border-t border-gray-100 flex gap-2 mb-4 justify-between"
             data-slot="card-footer"
         >
-            <!-- TODO EDIT MODAL -->
-            <SecondaryButton>Edit</SecondaryButton>
+            <SecondaryButton @click="$emit('edit', subscription)">Edit</SecondaryButton>
 
-            <!-- TODO DELETE MODAL -->
-            <DangerButton>Delete</DangerButton>
+            <DangerButton @click="$emit('delete', subscription)">Delete</DangerButton>
         </div>
     </div>
 
