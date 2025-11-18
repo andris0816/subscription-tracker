@@ -47,7 +47,9 @@ class SubscriptionController extends Controller
         $data = $request->validated();
         $subscription->update($data);
 
-        // Something to return
+        return back()->with([
+            'updatedSubscription' => new SubscriptionResource($subscription)
+        ]);
     }
 
     public function destroy(Subscription $subscription)
@@ -56,6 +58,8 @@ class SubscriptionController extends Controller
 
         $subscription->delete();
 
-        return Redirect::route('subscription.index');
+        return back()->with([
+            'deletedId' => $subscription->getKey()
+        ]);
     }
 }
