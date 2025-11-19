@@ -4,8 +4,8 @@ import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import {ref} from "vue";
 import {Subscription} from "@/types/subscription.interface";
-import {router, usePage} from "@inertiajs/vue3";
 import axios from "axios";
+import {ValidationErrors} from "@/types/validation-error.interface";
 
 const props = defineProps<{
     show: boolean,
@@ -18,12 +18,26 @@ const emit = defineEmits<{
     deleted: [id: number];
     close: [];
 }>();
+const errors = ref<ValidationErrors>({});
 
 const deleteSubscription = async () => {
-    const response = await axios.delete(route('subscriptions.destroy', props.subscription.id));
+    try {
+        const response = await axios.delete(
+            route('subscriptions.destroy',
+                props.subscription.id
+            )
+        );
 
-    emit('deleted', response.data.deletedId);
-    emit('close');
+        emit('deleted', response.data.deletedId);
+        emit('close');
+    } catch (error: any) {
+        if (error.response?.status === 422) {
+            errors.value = error.response.data.errors;
+            return;
+        }
+
+        console.error(error);
+    }
 };
 </script>
 

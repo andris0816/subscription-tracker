@@ -8,12 +8,13 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {watch} from "vue";
+import {ref, watch} from "vue";
 import {Subscription} from "@/types/subscription.interface";
 import {currencies} from "@/types/currency.types";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import InputError from "@/Components/InputError.vue";
 import axios from "axios";
+import { ValidationErrors } from "@/types/validation-error.interface";
 
 const props = defineProps<{
     show: boolean,
@@ -35,21 +36,35 @@ const emit = defineEmits<{
     close: [];
 }>();
 
+const errors = ref<ValidationErrors>({});
+
 const createSubscription = async () => {
-    if (props.subscription) {
-        const response = await axios.patch(
-            route('subscriptions.update', { subscription: props.subscription.id }),
-            form.data()
-        );
+    try {
+        let response: any;
 
-        emit('updated', response.data.subscription);
+        if (props.subscription) {
+            response = await axios.patch(
+                route('subscriptions.update', { subscription: props.subscription.id }),
+                form.data()
+            );
+            emit('updated', response.data.subscription);
+        } else {
+            response = await axios.post(
+                route('subscriptions.store'),
+                form.data()
+            );
+            emit('created', response.data.subscription);
+        }
 
         close();
-    } else {
-        const response = await axios.post(route('subscriptions.store'), form.data());
-        emit('created', response.data.subscription);
 
-        close();
+    } catch (error: any) {
+        if (error.response?.status === 422) {
+            errors.value = error.response.data.errors;
+            return;
+        }
+
+        console.error(error);
     }
 };
 
@@ -86,7 +101,7 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
                         v-model="form.name"
                         class="mt-1 block w-full"
                     />
-                    <InputError :message="form.errors.name" class="mt-2" />
+                    <InputError :message="errors?.name?.[0]" class="mt-2" />
                 </div>
                 <div class="mt-4">
                     <InputLabel for="price" value="Price" />
@@ -96,7 +111,7 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
                         v-model="form.price"
                         class="mt-2 block w-full"
                     />
-                    <InputError :message="form.errors.price" class="mt-2" />
+                    <InputError :message="errors?.price?.[0]" class="mt-2" />
                 </div>
                 <div class="mt-4">
                     <InputLabel for="currency" value="Currency" />
@@ -117,7 +132,7 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
                                 </ListboxOption>
                             </ListboxOptions>
                         </Listbox>
-                        <InputError :message="form.errors.currency" class="mt-2" />
+                        <InputError :message="errors?.currency?.[0]" class="mt-2" />
                     </div>
                 </div>
                 <div class="mt-4">
@@ -128,7 +143,7 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
                         class="mt-2"
                         teleport="body"
                     />
-                    <InputError :message="form.errors.renewal_date" class="mt-2" />
+                    <InputError :message="errors?.renewal_date?.[0]" class="mt-2" />
                 </div>
                 <div class="mt-4">
                     <InputLabel for="billingCycle" value="Billing Cycle" />
@@ -138,7 +153,7 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
                         v-model="form.billing_cycle"
                         class="mt-2 block w-full"
                     />
-                    <InputError :message="form.errors.billing_cycle" class="mt-2" />
+                    <InputError :message="errors?.billing_cycle?.[0]" class="mt-2" />
                 </div>
                 <div class="mt-4">
                     <InputLabel for="cancelUrl" value="Cancel Url" />
@@ -148,7 +163,7 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
                         v-model="form.cancel_url"
                         class="mt-2 block w-full"
                     />
-                    <InputError :message="form.errors.cancel_url" class="mt-2" />
+                    <InputError :message="errors?.cancel_url?.[0]" class="mt-2" />
                 </div>
 
                 <div class="mt-6 flex justify-end">
