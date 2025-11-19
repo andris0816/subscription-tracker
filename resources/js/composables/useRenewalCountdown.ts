@@ -1,9 +1,14 @@
 import {computed} from "vue";
 
-export function useRenewalCountdown(renewalDate: string | Date) {
+export function useRenewalCountdown(renewalDate: string | Date | null | undefined) {
     const timeUntil = computed(() => {
         const now = new Date();
-        const date = new Date(renewalDate);
+        const date =
+            typeof renewalDate === "string" || typeof renewalDate === "number"
+                ? new Date(renewalDate)
+                : renewalDate instanceof Date
+                    ? renewalDate
+                    : new Date(String(renewalDate));
 
         const diffMs = date.getTime() - now.getTime();
         if (diffMs <= 0) return "Already Renewed";
@@ -31,8 +36,22 @@ export function useRenewalCountdown(renewalDate: string | Date) {
     return { timeUntil };
 }
 
-export function useRenewalStatus(renewalDate: string | Date) {
-    const date = new Date(renewalDate)
+export function useRenewalStatus(renewalDate: string | Date | null | undefined) {
+    if (!renewalDate) {
+        return {
+            daysLeft: 0,
+            renewingSoon: false,
+            expired: true,
+        };
+    }
+
+    const date =
+        typeof renewalDate === "string" || typeof renewalDate === "number"
+            ? new Date(renewalDate)
+            : renewalDate instanceof Date
+                ? renewalDate
+                : new Date(String(renewalDate));
+
     const now = new Date();
 
     const diffMs = date.getTime() - now.getTime();
@@ -42,5 +61,6 @@ export function useRenewalStatus(renewalDate: string | Date) {
         daysLeft: diffDays,
         renewingSoon: diffDays > 0 && diffDays <= 7,
         expired: diffDays <= 0,
-    }
+    };
 }
+

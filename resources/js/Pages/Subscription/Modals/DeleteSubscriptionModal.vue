@@ -5,6 +5,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import {ref} from "vue";
 import {Subscription} from "@/types/subscription.interface";
 import {router, usePage} from "@inertiajs/vue3";
+import axios from "axios";
 
 const props = defineProps<{
     show: boolean,

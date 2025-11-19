@@ -13,6 +13,7 @@ import {Subscription} from "@/types/subscription.interface";
 import {currencies} from "@/types/currency.types";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import InputError from "@/Components/InputError.vue";
+import axios from "axios";
 
 const props = defineProps<{
     show: boolean,
@@ -22,7 +23,7 @@ const props = defineProps<{
 const form = useForm({
     name: '',
     price: '',
-    renewal_date: null,
+    renewal_date: null as Date | null,
     currency: currencies[0],
     billing_cycle: '',
     cancel_url: '',

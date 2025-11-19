@@ -7,6 +7,7 @@ import {Head} from "@inertiajs/vue3";
 import {ref} from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DeleteSubscriptionModal from "@/Pages/Subscription/Modals/DeleteSubscriptionModal.vue";
+import {toast} from "@/utils/toast";
 
 interface Props {
     subscriptions: Subscription[];
@@ -28,11 +29,13 @@ const handleUpdated = (subscription: Subscription) => {
         s.id === subscription.id ? subscription : s
     );
     showCreateEditModal.value = false;
+    toast.success("Subscription Updated Successfully!")
 }
 
 const handleDeleted = (id: number) => {
     subscriptionsRef.value = subscriptionsRef.value.filter(s => s.id !== id);
     selectedSubscription.value = null;
+    toast.success("Subscription Deleted Successfully!")
 }
 
 const openCreateModal = () => {
