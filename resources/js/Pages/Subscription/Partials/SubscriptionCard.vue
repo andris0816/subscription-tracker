@@ -54,8 +54,7 @@ const { timeUntil } = useRenewalCountdown(props.subscription.renewal_date);
                     <line x1="12" x2="12" y1="2" y2="22"></line>
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                 </svg>
-                <span>{{ subscription.price }}</span>
-                <span>/ {{ subscription.billing_cycle }}</span>
+                <span>{{ subscription.price }} {{ subscription.currency }} / {{ subscription.billing_cycle }}</span>
             </div>
             <div class="flex items-center text-gray-700">
                 <svg

@@ -22,6 +22,7 @@ const selectedSubscription = ref<Subscription | null>(null);
 const handleCreated = (subscription: Subscription) => {
     subscriptionsRef.value.unshift(subscription);
     showCreateEditModal.value = false;
+    toast.success("Subscription Created Successfully!")
 }
 
 const handleUpdated = (subscription: Subscription) => {
