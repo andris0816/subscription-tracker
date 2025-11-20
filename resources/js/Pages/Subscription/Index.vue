@@ -68,7 +68,25 @@ const openDeleteModal = (subscription: Subscription) => {
         </template>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="flex items-center justify-end mb-8">
-                <PrimaryButton @click="openCreateModal">Create Subscription</PrimaryButton>
+                <PrimaryButton @click="openCreateModal" class="flex items-center justify-center gap-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-plus h-4 w-4"
+                        aria-hidden="true"
+                    >
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5v14"></path>
+                    </svg>
+                    Create Subscription
+                </PrimaryButton>
 
                 <CreateSubscriptionModal
                     :show="showCreateEditModal"
