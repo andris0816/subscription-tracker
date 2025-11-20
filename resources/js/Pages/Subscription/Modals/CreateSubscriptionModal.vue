@@ -140,6 +140,7 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
                     <VueDatePicker
                         id="renewalDate"
                         v-model="form.renewal_date"
+                        :time-config="{ enableTimePicker: false }"
                         class="mt-2"
                         teleport="body"
                     />
