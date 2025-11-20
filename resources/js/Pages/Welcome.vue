@@ -1,6 +1,8 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import GuestLayout from "@/Layouts/GuestLayout.vue";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import WelcomePageContent from "@/Pages/Welcome/Partials/WelcomePageContent.vue";
 
 defineProps({
     canLogin: {
@@ -19,19 +21,16 @@ defineProps({
     },
 });
 
-function handleImageError() {
-    document.getElementById('screenshot-container')?.classList.add('!hidden');
-    document.getElementById('docs-card')?.classList.add('!row-span-1');
-    document.getElementById('docs-card-content')?.classList.add('!flex-row');
-    document.getElementById('background')?.classList.add('!hidden');
-}
 </script>
 
 <template>
     <Head title="Welcome" />
-    <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-        <GuestLayout>
-            Welcome page (TBD)
+    <div class="bg-gray-50 text-black h-full">
+        <AuthenticatedLayout v-if="$page.props.auth.user">
+            <WelcomePageContent />
+        </AuthenticatedLayout>
+        <GuestLayout v-else>
+            <WelcomePageContent />
         </GuestLayout>
     </div>
 </template>
