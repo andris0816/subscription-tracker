@@ -70,7 +70,7 @@ const createSubscription = async () => {
 
 const close = () => {
     form.reset();
-    form.clearErrors();
+    errors.value = {};
     emit('close');
 };
 
