@@ -178,7 +178,7 @@ watch(() => props.subscription, (newSubscription: Subscription) => {
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                     >
-                        Add Subscription
+                        {{ props.subscription ? "Update Subscription" : "Add Subscription" }}
                     </PrimaryButton>
                 </div>
             </form>
