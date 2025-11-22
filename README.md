@@ -93,8 +93,11 @@ I frequently sign up for free trials and promotional subscriptions but often for
 
 [TODO Screenshots]
 - Dashboard with subscription list
+![Subscription List](docs/pictures/subscription-list.png)
 - Create/Edit modal
+![Subscription Edit Modal](docs/pictures/subscription-create-edit-modal.png)
 - Email reminder example
+![Email Reminder](docs/pictures/email-reminder.png)
 
 ## What I Learned
 
